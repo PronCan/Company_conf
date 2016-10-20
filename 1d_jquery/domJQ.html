@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .item {
+            color: red;
+        }
+    </style>
+    <script src="js/jquery-1.12.4.min.js"></script>
+    <script>
+        $(function () {
+            var addObj = $("#add"); // id속성이 add인 객체 찾기
+            $(addObj).click(function () {
+                $("h1").addClass("item");
+            });
+
+            var removeObj = $("#remove"); // id속성이 remove인 객체 찾기
+            $(removeObj).click(function () {
+                $("h1").removeClass("item");
+            });
+
+            var zoomin = $("#zoomin");
+            $(zoomin).click(function () {
+                // 이미지의 style중 넓이와 높이를 크게 설정
+                $("img").css("width", "300px").css("height", "300px");
+            });
+
+            var zoomout = $("#zoomout");
+            $(zoomout).click(function () {
+                $("img").css("width", "150px").css("height", "150px");
+            });
+
+            var change = $("#change");
+            $(change).click(function () {
+                $("img").prop("src", "album_art.jpg");
+                //$("img").attr("src", "album_art.jpg");
+            });
+
+            //$("div:first").html("<h1>HELLO</h1>");
+            $("div:first").text("<h1>HELLO</h1>");
+            
+            $("div:eq(1)>button:last").click(function () {
+                $("div:eq(1)>h1").empty();
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+    <div>
+    </div>
+
+    <div>
+        <button id="zoomin">크게보기</button>
+        <button id="zoomout">작게보기</button>
+        <button id="change">이미지 변경</button>
+        <br> *
+        <h1>H1-0</h1>* *
+        <h1>H1-1</h1>* *
+        <h1>H1-2</h1>*
+
+        <img src="circle_orange.png" style="width:150px; height:150px;">
+    </div>
+
+    <div>
+        <button id="add">클래스 추가</button>&nbsp;&nbsp;
+        <button id="remove">클래스 제거</button>
+        <h1>Header-0</h1>
+        <h1>Header-1</h1>
+        <h1>Header-2</h1>
+        <h1>Header-3</h1>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="js/jquery-1.12.4.min.js"></script>
+    <script>
+        // checkbox:all 클릭되면 콘솔에 클릭되었습니다. 메세지 출력
+        // 현재 객체의 checked 속성값을 확인 후 var a=$(this).prop("checked"); 콘솔에 출력
+        // checked 속성값을 .prop("checked", true); < true 로 설정
+
+        // select객체에서 change이벤트가 발생한 경우 현재 객체의 value속성값을 콘솔에 출력 (change event 사용)
+
+        $(function () {
+            $("input[type=checkbox]:not(this)").prop("checked", a);
+            //console.log("클릭되었습니다.");
+
+            var a = $(this).prop("checked");
+            //console.log(a);
+
+            $("input[type=checkbox]:not(this)").prop("checked", a);
+            //            $.each($("input[type=checkbox]:not(this)"), function(index, item) {
+            //                $(item).prop("checked", a);
+            //            });
+        });
+
+        $("select").change(function () {
+            console.log($(this).val());
+        });
+    </script>
+</head>
+
+<body>
+
+    <input type="checkbox" id="all">All
+    <br>
+
+    <input type="checkbox">JAVA
+    <input type="checkbox">jQuery
+    <input type="checkbox">node.js
+    <br>
+
+    <select>
+        <option>위치를 선택하세요</option>
+        <option>본사</option>
+        <option>가산</option>
+        <option>부산</option>
+    </select>
+
+
+</body>
+
+</html>

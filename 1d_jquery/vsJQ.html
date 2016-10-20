@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .item {
+            background-color: gray;
+        }
+    </style>
+    <script src="js/jquery-1.12.4.min.js"></script>
+    <script>
+        // windos.addEventListener("load", ~~); 와 같은 효과지만 아예 같지는 않다.
+        //$(document).ready(function() {
+        //            
+        //});
+
+        // 가장 축약된 형태
+        $(function () {
+            // 모든 태그객체의 style속성 프로퍼티 중 color 프로퍼티값을 red로 변경
+            $("*").css("color", "red");
+            // class속성값이 item인 모든 객체의 style속성 프로퍼티 변경
+            $(".item").css("color", "blue");
+
+            // table 자식중 tr객체들을 찾는다.
+            //            var trObj = $("table>tr");
+            //            console.log(trObj);
+
+            // table 후손중 tr객체들을 찾는다.
+            var trObj = $("table tr");
+            console.log(trObj);
+
+            // vals()로 input태그의 value속성을 지정할 수 있다.
+            $("input[type=password]").val("1234");
+            var checkedObj = ($("input:checked")); //length가 3
+            console.log(checkedObj);
+            for (var i = 0; i < checkedObj.length; i++) {
+                console.log("checked 된 객체 value 속성값 : " + $(checkedObj[i]).val());
+            }
+            console.log($("select>option:selected"));
+            
+            $("table tr:odd").css("background-color", "green");
+
+            //var buttonObj;
+            //buttonObj = document.querySelector("button");
+            //buttonObj.addEventListener("click", function() {
+            //console.log("클릭되었습니다.");
+            //});
+            $("button").click(function () {
+                console.log("클릭되었습니다.");
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <table border="1">
+        <tr>
+            <td>1</td>
+            <td>2</td> 
+            <td>3</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>5</td>
+            <td>6</td>
+        </tr>
+    </table><br>
+    <table border="1">
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>5</td>
+            <td>6</td>
+        </tr>
+    </table>
+    <input class="item">
+    <br>
+    <input type="password">
+    <br>
+    <input type="checkbox" value="first">one&nbsp;&nbsp;
+    <input type="checkbox" value="second">two&nbsp;&nbsp;
+    <input type="checkbox" value="third">three
+    <br>
+
+    <input type="radio" name="r" checked="checked" value="first">one&nbsp;&nbsp;
+    <input type="radio" name="r" checked="checked" value="second">two&nbsp;&nbsp;
+    <input type="radio" name="r" value="third">three
+    <br>
+
+    <select>
+        <option value="first">one</option>
+        <option selected value="second">two</option>
+        <option value="third">three</option>
+    </select>
+    <br>
+
+    <button>Click</button>
+
+    <script>
+        console.log("2");
+    </script>
+</body>
+
+</html>

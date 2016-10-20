@@ -1,0 +1,39 @@
+<html>
+<head>
+  <style>
+    /* css 주석 */
+    /* 선택자 {프로퍼티명 : 값; ~~~~~} */
+    * {
+      color: blue;
+    }
+
+    div, span {
+      width : 100xp;
+      border: 1px solid;
+    }
+      input[type="password"] {
+          background-color: yellow;
+      }
+  </style>
+</head>
+
+<body>
+  <!-- div : 원하는 크기 지정 가능 -->
+  <div>블럭요소 : 자신의 영역을 갖는다, 넓이 높이 지정 가능, margin(상 하) 포함, 줄바꿈 됨</div>
+  <div>블럭요소 : 자신의 영역을 갖는다, 넓이 높이 지정 가능, margin(상 하) 포함, 줄바꿈 됨</div>
+  <!-- span : 알아서 크기 지정 -->
+  <span>인라인요소 : 자신의 영역 갖지 않음(넓이 높이 지정 불가능), 줄바꿈 안됨.</span>
+  <span>인라인요소 : 자신의 영역 갖지 않음(넓이 높이 지정 불가능), 줄바꿈 안됨.</span>
+
+  <h1>제목1</h1>
+  <h2>제목2</h2>
+  <input type="text"><!-- 인라인요소 : 줄바꿈 안됨 -->
+  <input type="password">
+  <br>
+  <img src="circle_orange.png" width="100px" height="100px">  <!-- img : 블럭요소 이면서 인라인 요소이다. (줄바꿈 안됨) -->
+  <img src="circle_orange.png" width="100px" height="100px">
+
+  <!-- 스타일 속성 property(프로퍼티)를 더 선호한다. ex)style="width:100px;" -->
+
+</body>
+</html>

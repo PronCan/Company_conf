@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- head -> body -->
+    <script>
+        // 함수 선언 방법
+        /*
+        익명함수
+        var a = function() {  };
+        
+        이름함수
+        function test(p1, p2) { return true; };
+        */
+
+        // 변수 선언 방법
+        /*
+        전역변수로 선언 : script 내부에 변수 선언, window 객체범위에 속한다.
+        변수의 범위 : var없이 선언한 변수는 상위 범위에 속한다.
+        */
+        var a;
+        a = 10;
+        console.log("a=" + window.a);
+
+        function test() {
+            // test 안에서 사용 가능, test 밖에서는 사용 불가하다.
+            var b = 99; // test() 함수 범위에 속한다.
+            c = 99;
+            console.log("test()의 b=" + b);
+            console.log("test()의 c=" + c);
+            
+            for(var i=0; i<5; i++) {
+                console.log("for의 i=" + i);
+            }
+            console.log("for밖의 i=" + i);
+        }
+        test();
+
+
+        //button객체 찾지 못함
+        window.addEventListener("load", function () {
+            console.log("1");
+            //DOM(documentObjectModel)트리에서 button객체 찾을 수 있음
+            var buttonObj;
+            buttonObj = document.querySelector("button");
+            console.log(buttonObj);
+            var h1Obj = document.querySelector("h1"); // 객체가 없으면 null값 반환
+            console.log(h1Obj);
+            buttonObj.addEventListener("click", function () {
+                console.log("버튼이 클릭되었습니다.");
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <input>
+    <br>
+    <input type="password">
+    <br>
+    <input type="checkbox">one&nbsp;&nbsp;
+    <input type="checkbox">two&nbsp;&nbsp;
+    <input type="checkbox">three
+    <br>
+
+    <input type="radio">one&nbsp;&nbsp;
+    <input type="radio">two&nbsp;&nbsp;
+    <input type="radio">three
+    <br>
+
+    <select>
+        <option>one</option>
+        <option>two</option>
+        <option>three</option>
+    </select>
+    <br>
+
+    <button>Click</button>
+
+    <script>
+        console.log("2");
+    </script>
+</body>
+
+</html>
