@@ -1,0 +1,2123 @@
+** 관계형 데이터베이스 기초 실습 **
+
+===============================
+실습 1. 기본 SELECT
+===============================
+
+1. Database 접속
+
+   Dos 창을 실행하여 다음과 같이 접속합니다.
+
+   C:\> sqlplus / as sysdba
+
+   SQL> alter user hr identified by hr account unlock;
+
+   SQL> conn hr/hr
+
+
+2. SQL*Plus 명령으로 데이터베이스에 액세스합니까?
+
+   False
+
+
+3. 다음 SELECT 문은 성공적으로 실행됩니까? 
+   
+   True
+
+   SELECT last_name, job_id, salary AS Sal
+   FROM   employees;
+
+
+4. 다음 SELECT 문은 성공적으로 실행됩니까? 
+   
+   True
+
+   SELECT * 
+   FROM   jobs;
+
+
+5. 이 문장에는 코딩 오류가 네 개 있습니다. 식별할 수 있습니까?
+
+   SELECT employee_id, last_name
+          sal x 12  ANNUAL SALARY
+   FROM      employees;
+
+   1) EMPLOYEES 테이블에는 sal이라는 컬럼이 없습니다. 해당 컬럼의 이름은 SALARY입니다.
+   2) 곱하기 연산자는 2번 줄에 나타나 있는 x가 아니라 *입니다.
+   3) 별칭 ANNUAL SALARY는 공백을 포함할 수 없습니다. ANNUAL_SALARY로 쓰거나 큰 따옴표로 묶어야 합니다.
+   4) last_name 컬럼 다음에 쉼표가 없습니다.
+
+
+6. DEPARTMENTS 테이블의 구조를 표시하고 테이블의 모든 데이터를 선택하십시오.
+
+   DESCRIBE departments
+
+   SELECT * FROM departments;
+
+
+7. EMPLOYEES 테이블의 구조를 표시하십시오. 
+   사원 번호가 가장 앞에 오고 이어서 각 사원의 이름, 업무 코드, 입사일이 오도록 질의를 작성하십시오.   HIRE_DATE 열에 STARTDATE라는 별칭을 지정하십시오. 
+
+   DESCRIBE employees
+	  
+   SELECT employee_id, last_name, job_id, hire_date StartDate
+   FROM   employees;
+
+
+8. EMPLOYEES 테이블의 업무 코드를 중복되지 않게 표시하는 질의를 작성하십시오.
+
+   SELECT ALL job_id 
+   FROM   employees;
+
+
+9. 열 머리글을 각각 Emp #, Employee, Job 및 Hire Date로 명명한 다음 질의를  실행하십시오.
+
+   SELECT employee_id "Emp #", last_name "Employee",
+          job_id "Job", hire_date "Hire Date"
+   FROM   employees;
+
+
+10. 업무 ID와 이름을 연결한 다음 쉼표 및 공백으로 구분하여 표시하고,
+    열 이름을 Employee and Title로 지정하십시오.
+
+    SELECT last_name||', '||job_id "Employee and Title"
+    FROM   employees;
+
+
+11. EMPLOYEES 테이블의 모든 데이터를 표시하는 질의를 작성하십시오. 
+    각 열은 쉼표로 구분하고 열 이름은 THE_OUTPUT으로 지정하십시오.
+
+    SELECT employee_id || ',' || first_name || ',' || last_name 
+           || ',' || email || ',' || phone_number || ','|| job_id
+           || ',' || manager_id || ',' || hire_date || ',' || 
+           salary || ',' || commission_pct || ',' || department_id 
+           THE_OUTPUT
+    FROM   employees;
+
+
+===============================
+실습 2. 데이터 제한 및 정렬
+===============================
+
+1. 급여가 $12,000를 넘는 사원의 이름과 급여를 표시하는 질의를 작성하십시오.
+
+   SELECT  last_name, salary
+   FROM    employees     
+   WHERE   salary > 12000;
+
+
+2. 사원 번호가 176인 사원의 이름과 부서 번호를 표시하는 질의를 작성하십시오.
+
+   SELECT  last_name, department_id      
+   FROM    employees
+   WHERE   employee_id = 176;
+
+
+3. 급여가 $5,000에서 $12,000 사이에 포함되지 않는 모든 사원의 
+   이름과 급여를 표시하도록 질의를 작성하십시오.
+
+   SELECT  last_name, salary      
+   FROM    employees     
+   WHERE   salary NOT BETWEEN 5000 AND 12000;
+
+
+4. 2007년 2월 7일과 2007년 5월 24일 사이에 입사한 사원의 이름, 업무 ID 및 시작일을 표시하되, 
+   시작일을 기준으로 오름차순으로 정렬하십시오.
+
+   SELECT   last_name, job_id, hire_date
+   FROM     employees
+   WHERE    hire_date BETWEEN '07/02/07' AND '07/05/24'
+   ORDER BY hire_date;
+
+5. 부서 20 및 50에 속하는 모든 사원의 이름과 부서 번호를 이름을 기준으로 영문자순으로 표시하십시오.
+              
+   SELECT   last_name, department_id      
+   FROM     employees     
+   WHERE    department_id IN (20, 50)      
+   ORDER BY last_name;
+
+
+6. 급여가 $5,000와 $12,000 사이이고 부서 번호가 20 또는 50인 사원의 이름과 급여를 
+   나열하도록 질의를 작성하십시오.
+
+   SELECT   last_name "Employee", salary "Monthly Salary"    
+   FROM     employees     
+   WHERE    salary  BETWEEN 5000 AND 12000  AND department_id IN (20, 50);
+
+
+7. 2004년에 입사한 모든 사원의 이름과 입사일을 표시하십시오.
+
+   SELECT   last_name, hire_date      
+   FROM     employees     
+   WHERE    hire_date LIKE '04%';
+
+
+8. 관리자가 없는 모든 사원의 이름과 업무를 표시하십시오.
+
+   SELECT   last_name, job_id      
+   FROM     employees      
+   WHERE    manager_id IS NULL;
+
+
+9. 커미션을 받는 모든 사원의 이름, 급여 및 커미션을 급여 및 커미션을 기준으로 
+   내림차순으로 정렬하여 표시하십시오.
+
+   SELECT   last_name, salary, commission_pct      
+   FROM     employees      
+   WHERE    commission_pct IS NOT NULL     
+   ORDER BY salary DESC, commission_pct DESC;
+
+
+===============================
+실습 3. 단일 행 함수
+===============================
+
+1. 현재 날짜를 표시하는 질의를 작성하고 열 레이블을 Date로 지정하십시오.
+
+   SELECT   sysdate "Date"      
+   FROM     dual;
+
+SELECT next_day(sysdate, '금요일')
+FROM dual;
+
+SELECT next_day(sysdate, '금')
+FROM dual;
+
+SELECT 1+100
+FROM dual;
+
+SELECT 1+'100'
+FROM dual;
+
+SELECT last_name, hire_date
+FROM employees
+WHERE hire_date = to_date('03/05/27', 'RR/MM/DD');
+
+(cc -> 세기) 
+SELECT to_char(sysdate, 'cc yyyy-mm-dd hh24:mi:ss')
+FROM dual;
+
+SELECT to_char(sysdate, 'cc"세기" yyyy"년" mm"월" dd"일" ')
+FROM dual;
+
+SELECT to_char(salary, 'L999,999')
+FROM employees;
+
+SELECT to_char(salary, '$999,999')
+FROM employees;
+
+SELECT to_char(salary, 'L999,999')
+FROM employees;
+
+SELECT to_char(salary, '000000')
+FROM employees;
+
+RR
+YY
+95-03-01
+
+SELECT to_char( to_date('95-03-01', 'rr-mm-dd') , 'yyyy')
+FROM dual;
+
+SELECT NULLIF('A', 'B')
+FROM dual;
+
+SELECT COALESCE(1, 2, 3)
+FROM dual;
+
+2. 각 사원에 대해 사원 번호, 이름, 급여 및 15% 인상된 급여를 정수로 표시하십시오. 
+   인상된 급여 열의 레이블을 New Salary로 지정하십시오.
+
+   SELECT   employee_id, last_name, salary,
+            ROUND(salary * 1.15, 0) "New Salary"      
+   FROM     employees;
+
+3. 이름이 J, A 또는 M으로 시작하는 모든 사원의 이름(첫 글자는 대문자로, 나머지 글자는 소문자로 표시) 
+   및 이름 길이를 표시하는 질의를 작성하고 각 열에 적합한 레이블을 지정하십시오. 
+   결과를 사원의 이름에 따라 정렬하십시오.
+
+   SELECT   INITCAP(last_name) "Name", LENGTH(last_name) "Length"      
+   FROM     employees      
+   WHERE    last_name LIKE 'J%' OR last_name LIKE 'M%' OR last_name LIKE 'A%'
+   ORDER BY last_name;
+
+
+4. 각 사원의 이름을 표시하고 근무 달 수(입사일로부터 현재까지의 달 수)를 계산하여 
+   열 레이블을 MONTHS_WORKED로 지정하십시오. 
+   결과는 정수로 반올림하여 표시하고 근무 달 수를 기준으로 정렬하십시오.
+
+   SELECT   last_name, ROUND(MONTHS_BETWEEN(SYSDATE, hire_date)) MONTHS_WORKED      
+   FROM     employees      
+   ORDER BY MONTHS_BETWEEN(SYSDATE, hire_date);
+
+
+5. 각 사원에 대해 다음 항목을 생성하는 질의를 작성하십시오.	
+   <employee last name> earns <salary> monthly but wants <3 times salary>. 
+   열 레이블을 Dream Salaries로 지정하십시오.
+
+   SELECT   last_name || ' earns ' || TO_CHAR(salary, 'fm$99,999.00')               
+            || ' monthly but wants ' || TO_CHAR(salary * 3, 'fm$99,999.00')               
+            || '.' "Dream Salaries"      
+   FROM     employees;
+
+
+6. 모든 사원의 이름과 급여를 표시하는 질의를 작성하십시오. 
+   급여는 15자 길이로 왼쪽에 $ 기호가 채워진 형식으로 표기하고 열 레이블을 SALARY로 지정하십시오.
+
+   SELECT   last_name, LPAD(salary, 15, '$') SALARY     
+   FROM     employees;
+
+
+7. 사원의 이름, 입사일 및 급여 검토일을 표시하십시오. 급여 검토일은 여섯 달이 경과한 후 
+   첫번째 월요일입니다. 열 레이블을 REVIEW로 지정하고 날짜는 "Monday, the Thirty-First of July, 2000"과 
+   같은 형식으로 표시되도록 지정하십시오.
+
+   SELECT   last_name, hire_date, TO_CHAR(NEXT_DAY(ADD_MONTHS(hire_date, 6),'MONDAY'),
+            'fmDay, "the" Ddspth "of" Month, YYYY') REVIEW    
+   FROM     employees;
+
+
+8. 이름, 입사일 및 업무 시작 요일을 표시하고 열 레이블을 DAY로 지정하십시오. 
+   Monday를 시작으로 해서 요일을 기준으로 결과를 정렬하십시오.
+
+   SELECT   last_name, hire_date, TO_CHAR(hire_date, 'DAY') DAY      
+   FROM     employees      
+   ORDER BY TO_CHAR(hire_date - 1, 'd');
+
+
+9. 사원의 이름과 커미션 합계를 표시하는 질의를 작성하십시오. 커미션을 받지 않는 사원일 경우 
+   "No Commission"을 표시하십시오. 열 레이블은 COMM으로 지정하십시오.
+
+   SELECT   last_name, NVL(TO_CHAR(commission_pct), 'No Commission') COMM      
+   FROM     employees;
+
+
+10. 사원의 이름을 표시하고 급여 총액을 별표(*)로 나타내는 질의를 작성하십시오. 
+    각 별표는 1,000달러를 나타냅니다. 급여를 기준으로 데이터를 내림차순으로 정렬하고 열 레이블을
+    EMPLOYEES_AND_THEIR_SALARIES로 지정하십시오.
+
+    SELECT   rpad(last_name, 8)||' '|| rpad(' ', salary/1000+1, '*') 
+             EMPLOYEES_AND_THEIR_SALARIES     
+    FROM     employees      
+    ORDER BY salary DESC;
+
+
+11. DECODE 함수를 사용하여 다음 데이터에 따라 JOB_ID 열의 값을 기준으로 
+    모든 사원의 등급을 표시하는 질의를 작성하십시오.
+
+    업무		               등급	
+    AD_PRES			A	
+    ST_MAN			B	
+    IT_PROG			C	
+    SA_REP			D	
+    ST_CLERK			E	
+    None of the above		F	
+	
+    SELECT job_id, decode (job_id, 'ST_CLERK',  'E',
+                                   'SA_REP',    'D',
+                                   'IT_PROG',   'C',
+                                   'ST_MAN',    'B',
+                                   'AD_PRES',   'A',
+                                                'F') GRADE
+    FROM employees;
+ 
+
+12. 앞 문제의 명령문을 CASE 구문을 사용하여 재 작성하십시오.
+
+    SELECT job_id, CASE job_id WHEN 'ST_CLERK' THEN 'E'
+                               WHEN 'SA_REP'   THEN 'D'
+                               WHEN 'IT_PROG'  THEN 'C'
+                               WHEN 'ST_MAN'   THEN 'B'
+                               WHEN 'AD_PRES'  THEN 'A'
+                               ELSE 'G'  END  GRADE
+    FROM employees;
+
+
+===============================
+실습 4. 그룹 함수
+===============================
+
+SELECT min(salary), max(salary),
+	sum(salary), avg(salary)
+FROM employees;
+
+table : t1
+c1	c2
+------------
+1	10
+2	NULL
+3	20
+
+SELECT count(c2) from t1;
+
+SELECT AVG(c1) from t1;
+
+SELECT count(ALL c1) from t1; -> 3
+
+SELECT count(dictinct c1) from t1; -> 2
+
+table : t1
+c1	c2
+------------
+남	10
+여	10
+여	10
+남	10
+
+SELECT c1, avg(c2) from t1
+GROUP BY c1;
+
+남 10
+여 10
+->
+SELECT job_id, avg(salary)
+FROM employees
+GROUP BY job_id;
+
+SELECT avg(salary)
+FROM employees
+GROUP BY job_id;	( 이런것도 가능하지만 위에걸 쓰도록 하자.)
+
+
+1. 그룹 함수는 여러 행에 적용되어 그룹 당 하나의 결과를 출력합니다.
+
+   True
+
+
+2. 그룹 함수는 계산에 널을 포함합니다.
+
+   False. 
+   그룹 함수는 널 값을 무시합니다. 
+   널 값을 포함시키려면 NVL 함수를 사용하십시오.
+
+
+3. WHERE 절은 그룹 계산에 행(row)을 포함시키기 전에 행을 제한합니다.
+
+   True
+
+
+4. 모든 사원의 급여 최고액, 최저액, 총액 및 평균액을 표시하십시오. 
+   열 레이블을 각각 Maximum, Minimum, Sum 및 Average로 지정하고 결과를 정수로 반올림하십시오. 
+
+   SELECT   ROUND(MAX(salary),0) "Maximum", ROUND(MIN(salary),0) "Minimum",
+            ROUND(SUM(salary),0) "Sum", ROUND(AVG(salary),0) "Average"      
+   FROM     employees;
+
+
+5. 앞의 질의를 수정하여 각 업무 유형별로 급여 최고액, 최저액, 총액 및 평균액을 표시하십시오.
+
+   SELECT   job_id, ROUND(MAX(salary),0) "Maximum", ROUND(MIN(salary),0) "Minimum",
+            ROUND(SUM(salary),0) "Sum", ROUND(AVG(salary),0) "Average"      
+   FROM     employees      
+   GROUP BY job_id;
+
+
+6. 업무가 동일한 사원 수를 표시하는 질의를 작성하십시오.
+
+   SELECT   job_id, COUNT(*)      
+   FROM     employees      
+   GROUP BY job_id;
+
+
+7. 관리자는 나열하지 말고 관리자 수를 확인하십시오. 
+   열 레이블은 Number of Managers로 지정하십시오.
+
+   SELECT   COUNT(DISTINCT manager_id) "Number of Managers"     
+   FROM     employees;
+
+
+8. 최고 급여와 최저 급여의 차액을 표시하는 질의를 작성하고 열 레이블을 DIFFERENCE로 지정하십시오.
+
+   SELECT   MAX(salary) - MIN(salary) DIFFERENCE      
+   FROM     employees;
+
+
+9. 관리자 번호 및 해당 관리자에 속한 사원의 최저 급여를 표시하십시오.
+   관리자를 알 수 없는 사원 및 최저 급여가 $6,000 미만인 그룹은 제외시키고 
+   결과를 급여에 대한 내림차순으로 정렬하십시오.
+
+   SELECT   manager_id, MIN(salary)      
+   FROM     employees      
+   WHERE    manager_id IS NOT NULL      
+   GROUP BY manager_id      
+   HAVING   MIN(salary) > 6000      
+   ORDER BY MIN(salary) DESC;
+
+
+10. 각 부서에 대해 부서 이름, 위치, 사원 수, 부서 내 모든 사원의 평균 급여를 표시하는 
+    질의를 작성하고, 열 레이블을 각각 Name, Location, Number of People 및 Salary로 지정하십시오. 
+    평균 급여는 소수점 둘째 자리로 반올림하십시오.
+      
+    SELECT   d.department_name "Name", d.location_id "Location", 
+             COUNT(*) "Number of People", ROUND(AVG(salary),2) "Salary"      
+    FROM     employees e, departments d      
+    WHERE    e.department_id = d.department_id     
+    GROUP BY d.department_name, d.location_id;
+
+
+11. 총 사원 수 및 2005, 2006, 2007, 2008년에 입사한 사원 수를 표시하는 질의를 작성하고 
+    적합한 열 머리글을 작성하십시오.
+
+    SELECT  COUNT(*) total, 
+            SUM(DECODE(TO_CHAR(hire_date, 'YYYY'), 2005, 1, 0)) "2005",
+            SUM(DECODE(TO_CHAR(hire_date, 'YYYY'), 2006, 1, 0)) "2006",
+            SUM(DECODE(TO_CHAR(hire_date, 'YYYY'), 2007, 1, 0)) "2007",
+            SUM(DECODE(TO_CHAR(hire_date, 'YYYY'), 2008, 1, 0)) "2008"      
+    FROM    employees;
+
+
+12. 업무를 표시한 다음 해당 업무에 대해 부서 번호별 급여 및 부서 20, 50, 80 및 90의 
+    급여 총액을 각각 표시하는 행렬 질의를 작성하고 각 열에 적합한 머리글을 지정하십시오.
+
+    SELECT   job_id "Job",
+             SUM(DECODE(department_id , 20, salary)) "Dept 20",
+             SUM(DECODE(department_id , 50, salary)) "Dept 50",
+             SUM(DECODE(department_id , 80, salary)) "Dept 80",
+             SUM(DECODE(department_id , 90, salary)) "Dept 90", 
+             SUM(salary) "Total"      
+    FROM     employees      
+    GROUP BY job_id;
+
+
+===============================
+실습 5. 조인
+===============================
+
+SELECT   last_name, LPAD(salary, 15, '$') SALARY     
+   FROM     employees;
+
+1. 모든 사원의 이름, 부서 번호, 부서 이름을 표시하는 질의를 작성하십시오.
+
+   SELECT e.last_name, e.department_id, d.department_name
+   FROM employees e, departments d
+   WHERE e.department_id = d.department_id;
+   
+    
+2. 부서 80에 속하는 모든 업무의 고유 목록을 작성하고 출력 결과에 부서의 위치를 포함시키십시오.
+
+   SELECT DISTINCT job_id, location_id
+   FROM employees, departments
+   WHERE employees.department_id = departments.department_id
+   AND employees.department_id = 80;
+   
+    
+3. 커미션을 받는 모든 사원의 이름, 부서 이름, 위치 ID 및 도시를 표시하는 질의를 작성하십시오.
+       
+   SELECT e.last_name, d.department_name, d.location_id, l.city
+   FROM employees e, departments d, locations l
+   WHERE e.department_id = d.department_id
+   AND
+   d.location_id = l.location_id
+   AND e.commission_pct IS NOT NULL;
+
+
+4. 이름에 a(소문자)가 포함된 모든 사원의 이름과 부서 이름을 표시하는 질의를 작성하십시오.
+     
+   SELECT last_name, department_name
+   FROM employees, departments
+   WHERE employees.department_id = departments.department_id
+   AND last_name LIKE '%a%';
+   
+   
+5. Toronto에서 근무하는 모든 사원의 이름, 업무, 부서 번호 및 부서 이름을 표시하는 질의를 작성하십시오.
+
+   SELECT e.last_name, e.job_id, e.department_id, 
+          d.department_name
+   FROM employees e JOIN departments d 
+   ON (e.department_id = d.department_id)
+   JOIN locations l
+   ON (d.location_id = l.location_id)
+   WHERE LOWER(l.city) = 'toronto';
+
+
+6. 사원의 이름 및 사원 번호를 관리자의 이름 및 관리자 번호와 함께 표시하고 각각의 열 레이블을 
+   Employee, Emp#, Manager, Mgr#로 지정하십시오. 
+
+   SELECT w.last_name "Employee", w.employee_id "EMP#", 
+          m.last_name "Manager", m.employee_id  "Mgr#"
+   FROM employees w join employees m
+   ON (w.manager_id = m.employee_id);
+
+
+7. King을 포함하여 관리자가 없는 모든 사원을 표시하도록 하고 결과를 사원 번호를 기준으로 정렬하십시오. 
+
+   SELECT w.last_name "Employee", w.employee_id "EMP#", 
+          m.last_name "Manager", m.employee_id  "Mgr#"
+   FROM employees w LEFT OUTER JOIN employees m
+   ON (w.manager_id = m.employee_id);
+
+
+8. 지정한 사원의 이름, 부서 번호 및 지정한 사원과 동일한 부서에서 근무하는 모든 사원을 표시하도록 
+   질의를 작성하고 각 열에 적합한 레이블을 지정하십시오.
+
+   SELECT e.department_id department, e.last_name employee,
+          c.last_name colleague
+   FROM   employees e JOIN employees c
+   ON     (e.department_id = c.department_id)
+   WHERE   e.employee_id <> c.employee_id
+   ORDER BY e.department_id, e.last_name, c.last_name;
+
+
+9. JOB_GRADES 테이블을 생성하고 데이터 입력 후, 
+   모든 사원의 이름, 업무, 부서 이름, 급여 및 등급을 표시하는 질의를 작성하십시오. 
+
+   CREATE TABLE job_grades
+   (grade_level VARCHAR2(3), lowest_sal NUMBER, highest_sal NUMBER);
+
+   INSERT INTO job_grades VALUES('A', 1000, 2999);
+   INSERT INTO job_grades VALUES('B', 3000, 5999);
+   INSERT INTO job_grades VALUES('C', 6000, 9999);
+   INSERT INTO job_grades VALUES('D', 10000, 14999);
+   INSERT INTO job_grades VALUES('E', 15000, 24999);
+   INSERT INTO job_grades VALUES('F', 25000, 40000);
+   COMMIT;
+
+   SELECT e.last_name, e.job_id, d.department_name,
+          e.salary, j.grade_level
+   FROM   employees e, departments d, job_grades j
+   WHERE  e.department_id = d.department_id
+   AND    e.salary BETWEEN j.lowest_sal AND j.highest_sal;
+   
+   -- 또는
+
+   SELECT e.last_name, e.job_id, d.department_name,
+          e.salary, j.grade_level
+   FROM   employees e JOIN departments d
+   ON     (e.department_id = d.department_id)
+   JOIN   job_grades j
+   ON    (e.salary BETWEEN j.lowest_sal AND j.highest_sal);
+
+
+10. Davies라는 사원보다 늦게 입사한 사원의 이름과 입사일을 표시하는 질의를 작성하십시오.
+
+    SELECT e.last_name, e.hire_date
+    FROM   employees e, employees davies
+    WHERE  davies.last_name = 'Davies'
+    AND    davies.hire_date < e.hire_date;
+
+    -- 또는
+
+    SELECT e.last_name, e.hire_date
+    FROM   employees e JOIN employees davies
+    ON     (davies.last_name = 'Davies')
+    WHERE  davies.hire_date < e.hire_date;
+
+
+11. 관리자보다 먼저 입사한 모든 사원의 이름 및 입사일을 관리자의 이름 및 입사일과 함께 표시하고 
+    열 레이블을 각각 Employee, Emp Hired, Manager, Mgr Hired로 지정하십시오.
+     
+    SELECT w.last_name, w.hire_date, m.last_name, m.hire_date
+    FROM   employees w, employees m
+    WHERE  w.manager_id = m.employee_id
+    AND    w.hire_date <  m.hire_date;
+
+    -- 또는
+
+    SELECT w.last_name, w.hire_date, m.last_name, m.hire_date
+    FROM   employees w JOIN employees m
+    ON    (w.manager_id = m.employee_id)
+    WHERE    w.hire_date <  m.hire_date;
+
+
+===============================
+실습 6. 서브쿼리
+===============================
+
+
+select last_name
+from employees
+where employee_id in (select manager_id
+                      from employees);
+
+
+select last_name
+from employees
+where employee_id not in (select manager_id
+                          from employees);
+
+select last_name
+from employees
+where employee_id not in (select manager_id
+                          from employees
+                          where manager_id is not null);
+
+
+1. Zlotkey와 동일한 부서에 속한 모든 사원의 이름과 입사일을 표시하는 질의를 작성하십시오. 
+   Zlotkey는 제외하십시오.
+
+   SELECT last_name, hire_date
+   FROM   employees
+   WHERE  department_id = (SELECT department_id
+                           FROM   employees
+                           WHERE  last_name = 'Zlotkey')
+   AND    last_name <> 'Zlotkey';
+       
+
+2. 급여가 평균 급여보다 많은 모든 사원의 사원 번호와 이름을 표시하는 질의를 작성하고 
+   결과를 급여에 대해 오름차순으로 정렬하십시오.
+
+   SELECT employee_id, last_name
+   FROM   employees
+   WHERE  salary > (SELECT AVG(salary)
+                    FROM   employees)
+   ORDER BY salary;
+
+ 
+3. 이름에 u가 포함된 사원과 같은 부서에서 일하는 모든 사원의 사원 번호와 이름을 표시하는
+   질의를 작성하십시오.
+
+    SELECT employee_id, last_name
+    FROM   employees
+    WHERE  department_id IN (SELECT department_id
+                             FROM   employees
+                             WHERE  last_name like '%u%');
+
+
+4. 부서 위치 ID가 1700인 모든 사원의 이름, 부서 번호 및 업무 ID를 표시하십시오.
+
+   SELECT last_name, department_id, job_id
+   FROM   employees
+   WHERE  department_id IN (SELECT department_id
+                            FROM   departments
+                            WHERE  location_id = 1700);
+
+
+5. King에게 보고하는 모든 사원의 이름과 급여를 표시하십시오.
+
+   SELECT last_name, salary
+   FROM   employees
+   WHERE  manager_id = (SELECT employee_id
+                        FROM   employees
+                        WHERE  last_name = 'King' AND employee_id = 100);
+
+
+6. Executive 부서의 모든 사원에 대한 부서 번호, 이름 및 업무 ID를 표시하십시오.
+
+   SELECT department_id, last_name, job_id
+   FROM   employees
+   WHERE  department_id IN (SELECT department_id
+                            FROM   departments
+                            WHERE  department_name = 'Executive');
+
+
+7. 평균 급여보다 많은 급여를 받고 이름에 u가 포함된 사원과 같은 부서에서 근무하는 
+   모든 사원의 사원 번호, 이름 및 급여를 표시하는 질의를 작성하십시오.
+
+    SELECT employee_id, last_name, salary
+    FROM   employees
+    WHERE  department_id IN (SELECT department_id
+                             FROM   employees
+                             WHERE  last_name like '%u%')
+    AND    salary > (SELECT AVG(salary)
+                     FROM   employees);
+
+
+===============================
+실습 7. DML
+===============================
+
+1. 다음 문장을 실행하여 실습에 사용할 MY_EMPLOYEE 테이블을 생성하십시오.
+
+   CREATE TABLE my_employee
+   (id  NUMBER(4) CONSTRAINT my_employee_id_nn NOT NULL,
+    last_name VARCHAR2(25),
+    first_name VARCHAR2(25),
+    userid  VARCHAR2(8),
+    salary  NUMBER(9,2));
+
+
+2. MY_EMPLOYEE 테이블의 구조를 표시하여 열 이름을 식별하십시오.
+
+   DESCRIBE my_employee
+
+
+3. 다음 예제 데이터의 첫번째 데이터 행(row)을 MY_EMPLOYEE 테이블에 추가하십시오. 
+   INSERT 절에 열을 나열하지 마십시오.
+
+   ID  LAST_NAME  FIRST_NAME  USERID    SALARY
+   1   Patel      Ralph       rpatel    895
+   2   Dancs      Betty       bdancs    860
+   3   Biri       Ben         bbiri     1100
+   4   Newman     Chad        cnewman   750
+   5   Ropeburn   Audrey      aropebur  1550
+	  
+
+   INSERT INTO my_employee      
+   VALUES (1, 'Patel', 'Ralph', 'rpatel', 895);
+
+
+4. 위의 목록에 있는 예제 데이터의 두번째 행을 MY_EMPLOYEE 테이블에 추가하십시오. 
+   이번에는 INSERT 절에 열을 명시적으로 나열하십시오.
+
+   INSERT INTO my_employee (id, last_name, first_name, userid, salary)
+   VALUES (2, 'Dancs', 'Betty', 'bdancs', 860);
+
+
+5. 테이블에 추가한 항목을 확인하십시오.
+
+   SELECT   *
+   FROM     my_employee;
+
+
+6. MY_EMPLOYEE 테이블로 insert 문을 작성하여 나머지 행들을 추가합니다. 
+
+   INSERT INTO my_employee      
+   VALUES (3, 'Biri', 'Ben', 'bbiri', 1100);
+
+   INSERT INTO my_employee      
+   VALUES (4, 'Newman', 'Chad', 'cnewman', 750);
+
+   INSERT INTO my_employee      
+   VALUES (5, 'Ropeburn', 'Audrey', 'aropebur', 550);
+
+	
+7. 테이블에 추가한 항목을 확인하십시오.
+
+   SELECT   *
+   FROM my_employee;
+
+
+8. 추가한 데이터를 영구히 저장하십시오.
+
+   COMMIT;
+
+
+9. 사원 3의 성을 Drexler로 변경하십시오.
+
+   UPDATE  my_employee     
+   SET     last_name = 'Drexler'      
+   WHERE   id = 3;
+
+
+10. 급여가 900 미만인 모든 사원의 급여를 1000으로 변경하십시오.
+
+    UPDATE  my_employee      
+    SET     salary = 1000      
+    WHERE   salary < 900;
+
+
+11. 테이블의 변경 내용을 확인하십시오.
+
+    SELECT  last_name, salary      
+    FROM    my_employee;
+
+
+12. MY_EMPLOYEE 테이블에서 Betty Dancs를 삭제하십시오.
+
+    DELETE FROM  my_employee      
+    WHERE last_name = 'Dancs';
+
+
+13. 테이블의 변경 내용을 확인하십시오.
+
+    SELECT  *      
+    FROM    my_employee;
+
+
+14. 보류 중인 변경 내용을 모두 커밋하십시오.
+
+    COMMIT;
+
+
+===============================
+실습 8. 테이블/인덱스 생성 및 관리
+===============================
+
+1. 다음 정보를 기반으로 DEPT 테이블을 생성하십시오. 테이블이 생성되었는지 확인하십시오.
+
+   열이름  데이터유형  길이
+   ID      NUMBER      7
+   NAME    VARCHAR2    25
+  
+
+   CREATE TABLE dept
+   (id NUMBER(7),
+    name VARCHAR2(25));
+
+   DESCRIBE dept
+
+
+2. DEPARTMENT 테이블의 데이터를 DEPT 테이블에 추가하십시오. 필요한 열만 추가하십시오.
+
+   INSERT INTO dept      
+   SELECT  department_id, department_name      
+   FROM    departments;
+
+
+3. 다음 정보를 기반으로 EMP 테이블을 생성하십시오. 테이블이 생성되었는지 확인하십시오.
+
+   열이름      데이터유형  길이
+   ID          NUMBER      7
+   LAST_NAME   VARCHAR2    25
+   FIRST_NAME  VARCHAR2    25
+   DEPT_ID     NUMBER      7
+
+
+   CREATE TABLE  emp
+   (id           NUMBER(7),
+    last_name    VARCHAR2(25),
+    first_name   VARCHAR2(25),
+    dept_id      NUMBER(7));
+
+   DESCRIBE emp
+
+
+4. EMP 테이블 last_name 열의 길이를 50으로 수정한 후 수정 내용을 확인하십시오.
+
+   ALTER TABLE emp
+   MODIFY (last_name   VARCHAR2(50));
+
+   DESCRIBE emp
+
+
+5. DEPT 및 EMP 테이블이 모두 데이터 딕셔너리에 저장되었는지 확인하십시오(힌트: USER_TABLES).
+
+   SELECT   table_name
+   FROM     user_tables
+   WHERE    table_name IN ('DEPT', 'EMP');
+
+
+6. EMPLOYEES 테이블 구조를 기반으로 EMPLOYEES2 테이블을 생성하십시오. 
+   EMPLOYEE_ID, FIRST_NAME, LAST_NAME, SALARY 및 DEPARTMENT_ID 열만 포함시키고 새 테이블의 열 이름을 
+   각각 ID, FIRST_NAME, LAST_NAME, SALARY 및 DEPT_ID로 지정하십시오.
+
+   CREATE TABLE employees2 
+   AS      
+   SELECT  employee_id id, first_name, last_name, salary, department_id dept_id      
+   FROM    employees;
+
+
+7. EMP 테이블을 삭제하십시오.
+
+   DROP TABLE emp;
+
+
+8. EMPLOYEES2 테이블의 이름을 EMP로 변경하십시오.
+
+   RENAME employees2 TO emp;
+
+
+9. DEPT 및 EMP 테이블 정의에 테이블을 설명하는 주석을 추가한 후 데이터 딕셔너리에서 
+   추가한 항목을 확인하십시오.
+
+   COMMENT ON TABLE emp IS 'Employee Information';
+
+   COMMENT ON TABLE dept IS 'Department Information';
+
+   SELECT  *
+   FROM    user_tab_comments
+   WHERE   table_name = 'DEPT'
+   OR      table_name = 'EMP';
+
+
+10. EMP 테이블에서 FIRST_NAME 열을 삭제한 후 테이블 설명을 참조하여 수정 내용을 확인하십시오.
+
+    ALTER TABLE emp
+    DROP COLUMN FIRST_NAME;
+
+    DESCRIBE emp
+
+
+11. EMP 테이블의 외래 키 열(DEPT_ID)에 대해 비고유 인덱스를 생성하십시오.
+
+    CREATE INDEX emp_dept_id_idx ON emp (dept_id);
+
+
+12. 데이터 딕셔너리에 있는 EMP 테이블의 인덱스 및 고유성을 표시하십시오.
+
+    SELECT   index_name, table_name, uniqueness 
+    FROM     user_indexes 
+    WHERE    table_name = 'EMP'; 
+
+
+===============================
+실습 9. 제약조건
+===============================
+
+1. 제약조건을 테스트할 MASTER, SLAVE 테이블을 생성하십시오.
+
+   CREATE TABLE master
+   (id NUMBER(3) CONSTRAINT master_id_pk PRIMARY KEY,
+    name VARCHAR2(15) CONSTRAINT master_name_nn NOT NULL,
+    phone VARCHAR2(13) CONSTRAINT master_phone_uk UNIQUE,
+    salary NUMBER(4) CONSTRAINT master_salary_ck CHECK(salary > 1000));
+ 
+    DESC master
+ 
+    CREATE TABLE slave
+    (s_id NUMBER(3) CONSTRAINT slave_s_id_pk PRIMARY KEY,
+     s_location VARCHAR2(20) CONSTRAINT slave_s_location_uk UNIQUE,
+     s_grade NUMBER(1) CONSTRAINT slave_s_grade_ck CHECK(s_grade IN(1,2,3,4)),
+     s_master_id NUMBER(3) CONSTRAINT slave_s_master_id_fk REFERENCES master (id));
+
+    DESC slave
+ 
+
+2. MASTER와 SLAVE 테이블에 데이터를 입력하여 제약조건을 테스트하십시오.
+ 
+    INSERT INTO master
+    VALUES(111, 'chan_ho', '018-411-2178', 5000);
+ 
+    -- Error입니다. 무슨 Error일까요?
+    INSERT INTO master
+    VALUES(111, 'in_ho', '017-411-2178', 4000);
+ 
+    다시 아래와 같이 입력해 보세요.
+    INSERT INTO master
+    VALUES(222, 'in_ho', '017-411-2178', 4000);
+ 
+    -- Error입니다. 무슨 Error일까요?
+    INSERT INTO master
+    VALUES(333, NULL, '019-411-2178', 8000);
+ 
+    다시 아래와 같이 입력해 보세요.
+    INSERT INTO master
+    VALUES(333, 'jung_ho', '019-411-2178', 8000);
+ 
+    -- Error입니다. 무슨 Error일까요?
+    INSERT INTO master
+    VALUES(444, 'ki_ho', '018-411-2178', 3000);
+ 
+    다시 아래와 같이 입력해 보세요.
+    INSERT INTO master
+    VALUES(444, 'ki_ho', '011-411-2178', 3000);
+ 
+    -- Error입니다. 무슨 Error일까요?
+    INSERT INTO MASTER
+    VALUES(555, 'young_ho', '016-411-2178', 900);
+ 
+    다시 아래와 같이 입력해 보세요.
+    INSERT INTO master
+    VALUES(555, 'young_ho', '016-411-2178', 6000);
+ 
+    SELECT * FROM master;
+ 
+    INSERT INTO slave
+    VALUES(111, 'tae_jeon', 1, 222);
+
+    -- Error입니다. 무슨 Error일까요?
+    INSERT INTO slave
+    VALUES(222, 'gwang_ju', 2, 999);
+ 
+    다시 아래와 같이 입력해 보세요.
+    INSERT INTO slave
+    VALUES(444, 'gwang_ju', 2, 222);
+ 
+    SELECT * FROM slave;
+
+
+3. USER_CONSTRAINTS 뷰를 질의하여 제약 조건이 추가되었는지 확인하고 
+   제약 조건의 유형 및 이름을 적어두십시오.
+
+   SELECT   constraint_name, constraint_type      
+   FROM     user_constraints      
+   WHERE    table_name IN ('MASTER','SLAVE');
+
+
+4. USER_OBJECTS 데이터 딕셔너리 뷰에서 MASTER 및 SLAVE 테이블의 객체 이름 및 유형을 표시하십시오. 
+   새 테이블 및 새 인덱스가 생성된 것을 볼 수 있습니다.
+
+   COL object_name FOR A20
+
+   SELECT   object_name, object_type      
+   FROM     user_objects      
+   WHERE    object_name LIKE 'MASTER%'      
+   OR       object_name LIKE 'SLAVE%';
+
+
+===============================
+실습 10. 뷰 생성
+===============================
+
+1. EMPLOYEES 테이블에서 사원 번호, 사원 이름 및 부서 번호를 기반으로 하는 EMPLOYEES_VU라는 
+   뷰를 생성하십시오. 사원 이름의 머리글을 EMPLOYEE로 변경하십시오.
+
+   CREATE OR REPLACE VIEW employees_vu 
+   AS
+   SELECT employee_id, last_name employee, department_id
+   FROM employees;
+
+
+2. EMPLOYEES_VU 뷰의 내용을 표시하십시오.
+
+   SELECT   *      
+   FROM     employees_vu;
+
+
+3. USER_VIEWS 데이터 딕셔너리 뷰에서 뷰 이름 및 텍스트를 선택하십시오.
+   참고: LONG 열의 내용을 더 많이 보려면 SQL*Plus 명령인 SET LONG n을 사용하십시오. 
+         여기서 n은 보려는 LONG 열의 문자 수를 나타내는 값입니다.
+
+   SET LONG 600
+
+   SELECT   view_name, text     
+   FROM     user_views;
+
+
+4. EMPLOYEES_VU 뷰를 사용하여 모든 사원의 이름 및 부서 번호를 표시하는 질의를 작성하십시오.
+
+   SELECT   employee, department_id      
+   FROM     employees_vu;
+
+
+5. 모든 사원의 이름, 부서 이름, 급여 및 급여 등급을 기반으로 하는 SALARY_VU라는 뷰를 생성하십시오.             
+   EMPLOYEES, DEPARTMENTS 및 JOB_GRADES 테이블을 사용하고 열 레이블을 
+   각각 Employee, Department, Salary 및 Grade로 지정하십시오.
+   
+   CREATE OR REPLACE VIEW salary_vu
+   AS
+   SELECT e.last_name "Employee",
+          d.department_name "Department",
+          e.salary "Salary",
+          j.grade_level "Grades"
+   FROM   employees e, departments d, job_grades j
+   WHERE  e.department_id = d.department_id
+   AND    e.salary BETWEEN j.lowest_sal and j.highest_sal;
+
+
+========================================
+실습 11. 시퀀스, 동의어
+========================================
+
+1. DEPT 테이블의 기본 키 열에 사용할 시퀀스를 생성하십시오. 
+   시퀀스 값은 300부터 시작하여 10씩 증가하며 최대 1000까지 가능합니다. 
+   시퀀스 이름은 DEPT_ID_SEQ로 지정하십시오.
+
+   CREATE SEQUENCE dept_id_seq      
+   START WITH 300      
+   INCREMENT BY 10      
+   MAXVALUE 1000;
+
+
+2. 시퀀스 이름, 최대값, 증가분, 마지막 번호와 같은 시퀀스 정보를 표시하는 질의를 작성하십시오.
+
+   SELECT   sequence_name, max_value, increment_by, last_number
+   FROM     user_sequences;
+
+
+3. DEPT 테이블에 두 행(row)을 삽입하는 문장을 작성하십시오. ID 열에 대해서는 이전에 생성한 
+   시퀀스를 사용하십시오. Education 및 Administration이라는 두 개의 부서를 추가하고 결과를 
+   확인한 후 스크립트의 명령을 실행하십시오.
+
+   INSERT INTO dept
+   VALUES (dept_id_seq.nextval, 'Education');
+
+   INSERT INTO dept
+   VALUES (dept_id_seq.nextval, 'Administration');
+
+
+4. DEPARTMENTS 테이블의 간략한 이름인 동의어 D를 생성합니다.
+
+   CREATE SYNONYM d
+   FOR departments;
+
+
+5. 동의어 D를 사용하여 테이블의 구조와 데이터를 조회하십시오.
+
+   DESC d
+
+   SELECT * FROM d;
+
+
+6. 동의어 d를 삭제합니다.
+
+   DROP SYNONYM d;
+
+
+=================================
+실습 12. 오라클 데이터베이스 구조
+=================================
+
+1. DBA 계정으로 접속하여 다음 실습을 진행하십시오.
+
+   CONNECT / AS SYSDBA
+
+   -- 또는
+
+   CONNECT SYSTEM/oracle
+
+
+2. 인스턴스의 SGA의 구성요소와 크기를 조회합니다.
+
+   SHOW SGA
+
+   SELECT * FROM V$SGAINFO;
+
+
+3. 데이터베이스 이름을 조회합니다.
+
+   SELECT name FROM v$database;
+
+
+4. 테이블스페이스 이름을 조회합니다.
+
+   SELECT tablespace_name FROM dba_tablespaces;
+
+
+5. 테이블스페이스, 데이터 파일 이름을 조회합니다.
+
+   COLUMN tablespace_name FORMAT A10
+   COLUMN file_name FORMAT A50
+
+   SELECT tablespace_name, file_name 
+   FROM dba_data_files;
+
+
+6. users 테이블스페이스에 데이터 파일을 추가하고, 추가된 내용을 조회합니다.
+   - 참고 : 데이터 파일 이름 및 경로는 LINUX 환경 기준
+
+   ALTER TABLESPACE users ADD DATAFILE
+   'C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS02.DBF' SIZE 10M;
+
+   SELECT tablespace_name, file_name 
+   FROM dba_data_files;
+
+
+7. 초기화 파라미터에서 데이터 블록 크기 조회합니다.
+
+   SHOW PARAMETER DB_BLOCK_SIZE
+
+
+8. HR 사용자의 세그먼트를 조회합니다.
+
+   COLUMN segment_name FORMAT A25
+
+   SELECT segment_name, tablespace_name, extents, blocks, bytes
+   FROM dba_segments
+   WHERE owner='HR';
+
+
+9. HR 사용자의 익스텐트를 조회합니다.
+
+   SELECT segment_name, extent_id, bytes, blocks 
+   FROM dba_extents
+   WHERE owner='HR';
+
+
+===============================
+실습 13. 인스턴스 관리
+===============================
+
+1. 초기화 파라미터를 확인합니다.
+
+   a. 모든 초기화 파라미터를 조회합니다.
+
+      $ sqlplus / as sysdba
+
+      SQL> show parameter
+
+   b. 파라미터 "db_block_size"를 조회합니다.
+
+      SQL> show parameter db_block_size
+
+   c. "size" 키워드가 있는 파라미터를 조회합니다.
+
+      SQL> show parameter size
+
+   d. 현재 사용하고 있는 파라미터 종류를 확인합니다.
+
+      SQL> show parameter spfile
+
+      VALUE에 값이 있으면 SPFILE를 사용중이며, 
+      값이 없으면 PFILE을 사용중입니다.
+
+
+2. 데이터베이스를 단계별로 시작하고 상태를 조회합니다.
+
+   a. 인스턴스를 종료후 Nomount하고, 상태를 조회합니다.
+
+      SQL> shutdown immediate
+
+      SQL> startup nomount;
+
+      SQL> select status from v$instance;
+
+   b. 다음과 같은 뷰를 조회하여 결과를 확인합니다.
+
+      실행되지 않는 뷰가 있습니까? 그 원인은 무엇입니까?
+
+      SQL> select name from v$datafile;
+
+      Mount 이상에서만 조회할 수 있습니다.
+
+      SQL> select member from v$logfile;
+
+      Mount 이상에서만 조회할 수 있습니다.
+
+      SQL> select username from dba_users;
+
+      Open에서만 조회할 수 있습니다.
+
+   c. 데이터베이스를 Mount하고, 상태를 조회합니다.
+
+      SQL> alter database mount;
+
+      SQL> select status from v$instance;
+
+   d. 다음과 같은 뷰를 조회하여 결과를 확인합니다.
+
+      실행되지 않는 뷰가 있습니까? 그 원인은 무엇입니까?
+
+      SQL> select name from v$datafile;
+
+      SQL> select member from v$logfile;
+
+      SQL> select username from dba_users;
+
+      Open에서만 조회할 수 있습니다.
+
+   e. 데이터베이스를 Open하고, 상태를 조회합니다.
+
+      SQL> alter database open;
+
+      SQL> select status from v$instance;
+
+   f. 다음과 같은 뷰를 조회하여 결과를 확인합니다.
+
+      SQL> select username from dba_users;
+
+
+3. 여러 모드로 데이터베이스를 종료합니다.
+
+   a. putty를 사용하여 두 개의 SQL*Plus 창을 엽니다.
+      한 개는 sys로, 다른 한 개는 hr로 접속합니다.
+
+   b. Shutdown Nomal 모드로 데이터베이스를 종료합니다.
+
+      1) hr로 접속합니다.
+
+         SQL> conn hr/hr
+
+      2) 다른 창에서 sys로 접속하고, Shutdown Nomal로 데이터베이를 종료합니다.
+
+         SQL> conn / as sysdba
+
+         SQL> shutdown nomal;
+
+         접속중인 세션이 있으므로 종료가 진행되지 않습니다.
+
+      3) hr 세션을 종료하고, sys 세션에서 데이터베이스가 종료되는지 확인합니다.
+
+         SQL> disconn
+
+      4) 다음 실습을 위해 sys 창에서 데이터베이스를 시작합니다.
+
+         SQL> startup
+
+   c. Shutdown Transactional 모드로 데이터베이스를 종료합니다.
+
+      1) hr로 접속하고, employees 테이블을 update 합니다.
+
+         SQL> conn hr/hr
+
+         SQL> update employees set salary=1234;
+
+      2) 다른 창에서 sys로 접속하고, Shutdown transactional로 데이터베이를 종료합니다.
+
+         SQL> conn / as sysdba
+
+         SQL> shutdown transactional;
+
+         완료되지 않은 트랜잭션이 있으므로 종료가 진행되지 않습니다.
+
+      3) hr 세션에서 트랜잭션을 종료하고, sys 세션에서 데이터베이스가 종료되는지 확인합니다.
+
+         SQL> rollback;
+
+      4) 다음 실습을 위해 sys 창에서 데이터베이스를 시작합니다.
+
+         SQL> startup
+
+   d. Shutdown Immediate 모드로 데이터베이스를 종료합니다.
+
+      1) hr로 접속하고, employees 테이블을 update 합니다.
+
+         SQL> conn hr/hr
+
+         SQL> update employees set salary=1234;
+
+      2) 다른 창에서 sys로 접속하고, Shutdown immediate로 데이터베이를 종료합니다.
+
+         SQL> conn / as sysdba
+
+         SQL> shutdown immediate;
+
+      3) sys 창에서 데이터베이스를 시작합니다.
+
+         SQL> startup
+
+      4) hr로 접속하여 employees 테이블을 조회하여 update 결과를 확인합니다.
+
+         SQL> conn hr/hr
+
+         SQL> select salary from employees;
+
+         employees 테이블의 update가 롤백되었습니다.
+
+
+4. Alert Log File과 내용을 확인합니다.
+
+   SQL> show parameter diagnostic_dest
+
+   SQL> exit
+
+   $ cd C:\oraclexe\app\oracle\diag\rdbms\xe\xe\trace
+
+   $ dir *.log
+
+   $ notepad alert_xe.log
+
+
+
+===============================
+실습 14. 네트워크 관리
+===============================
+
+1. 원격 접속 구성을 설정하고 테스트합니다.
+
+   a. 접속 문자열(서비스 별칭) orcl로 원격 접속을 합니다.
+
+      SQL> conn hr/hr@xe
+
+   b. 문자열 aaa를 생성하고 접속합니다.
+
+      $ cd C:\oraclexe\app\oracle\product\11.2.0\server\network\ADMIN
+
+      $ notepad tnsnames.ora
+
+       SQL> conn hr/hr@aaa
+
+
+2. 리스너 컨트롤 유틸리티(lsnrctl)로 리스너를 조작합니다.
+
+   a. 리스너를 시작합니다.
+
+      $ lsnrctl start
+      =
+      $ lsnrctl
+      =
+      LSNRCTL> start
+
+      기본 리스너(listener)는 start 다음에 리스너 이름을 생략할 수 있습니다. 
+
+      $ lsnrctl start listener
+      =
+      $ lsnrctl
+      =
+      LSNRCTL> start listener
+
+   b. 리스너를 종료합니다.
+
+      $ lsnrctl stop
+      =
+      $ lsnrctl
+      =
+      LSNRCTL> stop
+
+   c. 리스너 상태를 확인합니다.
+
+      LSNRCTL> status
+      =
+      LSNRCTL> stat
+
+   d. 리스너가 접속 연결(지원)을 중계하는 서비스를 확인합니다.
+
+      LSNRCTL> services
+      =
+      LSNRCTL> service
+      =
+      LSNRCTL> ser
+
+
+3. 이름 해결 방식을 확인합니다.
+
+   sqlnet.ora의 내용을 확인합니다.
+
+   $ cd C:\oraclexe\app\oracle\product\11.2.0\server\network\ADMIN
+
+   $ notepad sqlnet.ora
+
+     NAMES.DIRECTORY_PATH=(TNSNAMES, EZCONNECT)
+
+
+4. 리스너의 설정 파일인 listener.ora의 내용을 확인합니다.
+
+   $ notepad listener.ora
+
+     LISTENER =
+       (DESCRIPTION_LIST =
+         (DESCRIPTION =
+           (ADDRESS = (PROTOCOL = TCP)(HOST = ocpdba)(PORT = 1521))
+         )
+       )
+
+     SID_LIST_LISTENER =
+       (SID_LIST =
+         (SID_DESC =
+           (GLOBAL_DBNAME = orcl)
+           (ORACLE_HOME = C:\oraclexe\app\oracle\product\11.2.0\server)
+           (SID_NAME = xe)
+         )
+       )
+
+
+5. 서비스 이름을 확인하고 설정합니다.
+
+   a. DB 이름, 인스턴스 이름, 서비스 이름을 확인합니다.
+
+      SQL> conn /  as sysdba
+
+      SQL> show parameter db_name
+
+           데이터베이스 이름입니다.
+
+      SQL> show parameter instance_name
+
+           인스턴스의 이름입니다.
+
+      SQL> show parameter service_names
+
+           인스턴스의 서비스(별칭) 이름입니다.
+
+   b. SERVICE_NAME과 SID를 구별합니다.
+
+      아래와 같이 SERVICE_NAME에는 파라미터 service_names의 하나를 사용합니다.
+
+      ORCL =
+        (DESCRIPTION =
+          (ADDRESS_LIST =
+            (ADDRESS = (PROTOCOL = TCP)(HOST = ocpdba)(PORT = 1521))
+          )
+          (CONNECT_DATA =
+            (SERVER = DEDICATED)
+            (SERVICE_NAME = xe) -- service_names
+          )
+        )
+
+      아래와 같이 SID에는 파라미터 instnace_name을 사용합니다.
+
+      ORCL =
+        (DESCRIPTION =
+          (ADDRESS_LIST =
+            (ADDRESS = (PROTOCOL = TCP)(HOST = ocpdba)(PORT = 1521))
+          )
+          (CONNECT_DATA =
+            (SERVER = DEDICATED)
+            (SID = xe)  -- instnace_name
+          )
+        )
+
+   c. 서비스 이름을 설정합니다.
+
+      1) service_names 파라미터를 조회합니다.
+
+         SQL> show parameter service_names
+
+      2) service_names를 orcl,erp로 변경합니다.
+
+         SQL> alter system set service_names= 'xe,erp' ;
+
+      3) service_names 파라미터를 조회합니다.
+
+         SQL> show parameter service_names
+
+      4) service_names를 다시 orcl로 변경합니다.
+
+         SQL> alter system set service_names= 'xe' ;
+
+      5) service_names 파라미터를 조회합니다.
+
+         SQL> show parameter service_names
+
+
+===============================
+실습 15. 테이블스페이스 관리
+===============================
+
+1. Tablespace 유형을 조회합니다.
+
+   SQL> SELECT tablespace_name, contents FROM dba_tablespaces;
+
+
+2. 여러 유형의 테이블스페이스를 생성합니다.
+
+   a. PERMANENT 테이블스페이스를 생성합니다.
+
+      SQL> CREATE TABLESPACE test_ts 
+           DATAFILE 'C:\oraclexe\app\oracle\product\11.2.0\server\test_ts01.dbf' SIZE 10M;
+
+   b. UNDO 테이블스페이스를 생성합니다.
+
+      SQL> CREATE UNDO TABLESPACE undo_ts
+           DATAFILE 'C:\oraclexe\app\oracle\product\11.2.0\server\undo_ts01.dbf' SIZE 10M;
+
+   c. TEMPORARY 테이블스페이스를 생성합니다.
+
+      SQL> CREATE TEMPORARY TABLESPACE temp_ts
+           TEMPFILE 'C:\oraclexe\app\oracle\product\11.2.0\server\temp_ts01.dbf' SIZE 10M;
+
+
+3. 테이블스페이스의 상태를 변경합니다.
+
+   a. 읽기 전용(Read Only) 테이블스페이스로 변경합니다.
+
+      1) EXAMPLE 테이블스페이스를 읽기 전용으로 변경합니다.
+
+         SQL> ALTER TABLESPACE EXAMPLE READ ONLY;
+
+      2) hr.employees 테이블을 update 합니다.
+
+         SQL> update hr.employees set salary=8888;
+
+              ERROR at line 1:
+              ORA-00372: file 4 cannot be modified at this time
+              ORA-01110: data file 4: 'C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS.DBF'
+
+              읽기 전용 테이블스페이스의 테이블은 변경할 수 없습니다.
+
+      3) EXAMPLE 테이블스페이스를 읽기 쓰기로 변경합니다.
+
+         SQL> ALTER TABLESPACE EXAMPLE READ WRITE;
+
+   b. 오프라인(Offline) 테이블스페이스로 변경합니다.
+
+      1) EXAMPLE 테이블스페이스를 오프라인으로 변경합니다.
+
+         SQL> ALTER TABLESPACE  EXAMPLE OFFLINE NORMAL;
+         =
+         SQL> ALTER TABLESPACE  EXAMPLE OFFLINE;
+
+   c. hr.employees 테이블을 update 합니다.
+
+      SQL> update hr.employees set salary=8888;
+
+           ERROR at line 1:
+           ORA-00376: file 4 cannot be read at this time
+           ORA-01110: data file 4: 'C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS.DBF'
+           
+           오프라인 테이블스페이스의 테이블은 변경할 수 없습니다.
+
+   d. hr.employees 테이블을 select 합니다.
+
+      SQL> select count(*) from hr.employees;
+
+           ERROR at line 1:
+           ORA-00376: file 4 cannot be read at this time
+           ORA-01110: data file 4: 'C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS.DBF'
+
+          오프라인 테이블스페이스의 테이블은 읽을 수 없습니다.
+
+   e. EXAMPLE 테이블스페이스를 온라인으로 변경합니다.
+
+      SQL> ALTER TABLESPACE EXAMPLE ONLINE;
+
+
+4. Tablespace 크기를 조정합니다.
+
+   a. Datafile의 자동 확장을 활성화합니다.
+
+      1) USERS 테이블스페이스의 데이터 파일의 자동 확장을 비활성화합니다.
+
+         SQL> ALTER DATABASE 
+              DATAFILE 'C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS.DBF' AUTOEXTEND OFF;
+
+      2) USERS 테이블스페이스의 데이터 파일의 자동 확장을 활성화합니다.
+
+         SQL> ALTER DATABASE 
+              DATAFILE 'C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS.DBF' AUTOEXTEND ON
+              NEXT 10M MAXSIZE UNLIMITED;
+
+   b. 수동으로 Datafile의 크기를 조정합니다.
+
+      1) USERS 테이블스페이스의 데이터 파일의 크기를 500M로 조정합니다.
+
+         SQL> ALTER DATABASE 
+              DATAFILE 'C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS.DBF' RESIZE 500M;
+
+      2) USERS 테이블스페이스의 데이터 파일의 크기를 100M로 조정합니다.
+
+         SQL> ALTER DATABASE 
+              DATAFILE 'C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS.DBF' RESIZE 100M;
+
+      3) USERS 테이블스페이스의 데이터 파일의 크기를 3M로 조정합니다.
+
+         SQL> ALTER DATABASE 
+              DATAFILE 'C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS.DBF' RESIZE 3M;
+
+              ERROR at line 1:
+              ORA-03297: file contains used data beyond requested RESIZE value
+
+              사용 중인 데이터 범위 아래로 줄일 수 없습니다.
+
+   c. Tablespace에 Datafile을 추가합니다.
+
+      1) USERS 테이블스페이스에 데이터 파일을 추가합니다.
+
+         SQL> ALTER TABLESPACE USERS
+              ADD DATAFILE 'C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS03.DBF' SIZE 10M;
+
+
+5. 테이블스페이스를 삭제합니다.
+
+   a. 테이블스페이스 test1, test2, test3을 생성합니다.
+
+         SQL> CREATE TABLESPACE test1
+              DATAFILE 'C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS.DBF\test1.dbf' SIZE 10M;
+
+         SQL> CREATE TABLESPACE test2
+              DATAFILE 'C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS.DBF\test2.dbf' SIZE 10M;
+
+         SQL> CREATE TABLESPACE test3
+              DATAFILE 'C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS.DBF\test3.dbf' SIZE 10M;
+
+   b. 생성된 테이블스페이스를 조회합니다.
+
+         SQL> select TABLESPACE_NAME, FILE_NAME from dba_data_files;
+
+   c. TEST1 테이블스페이스를 삭제합니다.
+
+      1) TEST1 테이블스페이스를 삭제합니다.
+
+         SQL> drop tablespace test1;
+
+      2) TEST1 테이블스페이스의 데이터 파일을 확인합니다.
+
+         SQL> host dir C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS.DBF\test1.dbf
+
+      3) TEST1 테이블스페이스의 데이터 파일을 삭제합니다.
+
+         SQL> host del /u01/app/oracle/oradata/orcl/test1.dbf
+
+   d. TEST2 테이블스페이스를 삭제합니다.
+
+      1) TEST2 테이블스페이스에 emp 테이블을 생성합니다.
+
+         SQL> create table emp
+              (id number)
+              tablespace test2;
+
+      2) TEST2 테이블스페이스를 삭제합니다.
+
+         SQL> drop tablespace test2;
+
+              ERROR at line 1:
+              ORA-01549: tablespace not empty, use INCLUDING CONTENTS option
+
+              객체가 존재하는 테이블스페이스는 삭제할 수 없습니다.
+
+         SQL> drop tablespace test2 INCLUDING CONTENTS;
+
+      3) TEST2 테이블스페이스의 데이터 파일을 확인합니다.
+
+         SQL>  host dir C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS.DBF\test2.dbf
+
+      4) TEST2 테이블스페이스의 데이터 파일을 삭제합니다.
+
+         SQL> host del C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS.DBF\test2.dbf
+
+   e. TEST3 테이블스페이스를 데이터 파일과 함께 삭제합니다.
+
+      SQL> drop tablespace test3 INCLUDING CONTENTS and datafiles;
+
+
+===============================
+실습 16. 사용자 액세스 제어
+===============================
+
+1. 사용자가 Oracle Server에 로그인하기 위해 필요한 권한은 무엇입니까? 
+   시스템 권한과 객체 권한 중 어느 것입니까?
+
+   CREATE SESSION 시스템 권한
+
+
+2. 테이블을 생성할 때 필요한 권한은 무엇입니까?
+
+   CREATE TABLE 권한
+
+
+3. 생성한 테이블에 대한 권한을 다른 사용자에게 부여할 수 있는 사용자는 누구입니까?
+
+   생성자 및 생성자가 WITH GRANT OPTION을 사용하여 해당 권한을 부여한 사람
+
+
+4. DBA가 동일한 시스템 권한이 필요한 사용자를 여러 명 생성할 때 
+   간편하게 작업할 수 있는 방법은 무엇입니까?
+
+   시스템 권한을 포함하는 롤을 생성하여 사용자에게 부여합니다.	
+
+
+5. 암호를 변경할 때 사용하는 명령은 무엇입니까?
+
+   ALTER USER 문
+
+
+6. DBA 계정으로 사용자 이름은 TOMAS 암호는 oracle로 생성하고 CONNECT, RESOURCE 롤과 
+   CREATE SYNONYM 권한을 부여합니다.
+
+   CONNECT system/oracle
+
+   CREATE USER TOMAS IDENTIFIED BY oracle;
+
+   GRANT CONNECT, RESOURCE, CREATE SYNONYM TO TOMAS;
+
+
+7. HR 사용자의 DEPARTMENTS 테이블에 대한 SELECT 권한을 TOMAS 사용자에게 부여합니다.
+
+   GRANT SELECT ON hr.departments TO TOMAS;
+
+
+8. TOMAS 사용자로 접속하여 HR 사용자의 DEPARTMENTS 테이블에 있는 모든 행(row)을 질의하십시오.
+
+   CONNECT TOMAS/oracle
+
+   SELECT  *
+   FROM    hr.departments;
+
+
+9. TOMAS 사용자로 접속하여 HR 사용자의 DEPARTMENTS 테이블에 대한 동의어 DEP를 생성하십시오.
+
+   CONNECT TOMAS/oracle
+
+   CREATE SYNONYM DEP 
+   FOR hr.departments;
+
+
+10. 앞에서 만든 동의어를 사용하여 HR 사용자의 DEPARTMENTS 테이블에 포함된 모든 행(row)을 질의하십시오.
+
+    SELECT  *
+    FROM    DEP;
+
+
+11. TOMAS 사용자 자신이 소유한 테이블에 대한 정보를 표시하도록 USER_TABLES 데이터 딕셔너리를 질의하십시오.
+
+    SELECT  table_name      
+    FROM    user_tables;
+
+
+12. TOMAS 사용자가 액세스할 수 있는 모든 테이블에 대한 정보를 표시하도록 
+    ALL_TABLES 데이터 딕셔너리 뷰를 질의하십시오.
+
+    SELECT  table_name, owner     
+    FROM    all_tables;     
+
+
+13. TOMAS 사용자에게 부여했던 HR 사용자의 DEPARTMENTS 테이블에 대한 SELECT 권한을 취소하십시오.
+
+    CONNECT system/oracle
+    -- 또는 
+    CONNECT hr/hr
+
+    REVOKE select       
+    ON     hr.departments       
+    FROM   TOMAS;
+
+
+14.  사용자 정보를 조회합니다.
+
+    SQL> col USERNAME for a21
+    SQL> col ACCOUNT_STATUS for a20
+    SQL> col DEFAULT_TABLESPACE for a10
+    SQL> col TEMPORARY_TABLESPACE for a10
+    SQL> col PROFILE for a10
+
+    SQL> select USERNAME, ACCOUNT_STATUS, DEFAULT_TABLESPACE, 
+         TEMPORARY_TABLESPACE, PROFILE 
+         from DBA_USERS;
+
+    SQL> select * from DBA_TS_QUOTAS;
+
+
+15. 새로운 사용자를 user1을 생성합니다.
+    초기 암호를 만료시킵니다.
+
+    SQL> CREATE USER user1 IDENTIFIED BY user1
+         PASSWORD EXPIRE;
+
+    SQL> grant connect to user1;
+
+    새로운 사용자로 접속합니다. 암호는 다시 user1으로 지정합니다.
+
+    SQL> conn user1/user1
+
+
+16. 사용자의 Tablespace 할당량(quota)을 변경합니다.
+
+   a. user1 사용자에게 users 테이블스페이스 할당량을 부여하고 조회합니다.
+
+      SQL> alter user user1 quota 10m on users;
+
+      SQL> select USERNAME, TABLESPACE_NAME, MAX_BYTES 
+           from DBA_TS_QUOTAS where username = 'USER1';
+
+      SQL> alter user user1 quota unlimited on users;
+
+      SQL> select USERNAME, TABLESPACE_NAME, MAX_BYTES 
+           from DBA_TS_QUOTAS where username = 'USER1';
+
+      SQL> alter user user1 quota 0 on users;
+
+      SQL> select USERNAME, TABLESPACE_NAME, MAX_BYTES 
+           from DBA_TS_QUOTAS where username = 'USER1';
+
+      SQL> grant UNLIMITED TABLESPACE to user1;
+
+      SQL> select USERNAME, TABLESPACE_NAME, MAX_BYTES 
+           from DBA_TS_QUOTAS where username = 'USER1';
+
+      SQL> revoke UNLIMITED TABLESPACE from user1;
+
+   b. user1 사용자에게 resource 롤을 수여하고 조회합니다.
+
+      SQL> grant resource to user1;
+
+      SQL> select USERNAME, TABLESPACE_NAME, MAX_BYTES 
+           from DBA_TS_QUOTAS where username = 'USER1';
+
+
+17. 사용자를 삭제합니다.
+
+   a. oracle 사용자를 삭제합니다.
+
+      SQL> drop user oracle;
+
+   b. user1 사용자에게 테이블 생성 권한을 수여합니다.
+
+      SQL> grant create table to user1;
+
+   c. user1 사용자로 테이블을 생성합니다.
+
+      SQL> conn user1/user1
+
+      SQL> create table test(id number);
+
+   d. user1 사용자를 삭제합니다.
+
+      SQL> conn / as sysdba
+
+      SQL> drop user user1;
+
+      객체를 소유한 사용자 삭제는 CASCADE 옵션을 사용해야 합니다.
+
+      SQL> drop user user1 CASCADE;
+
+(참고) 현재 접속중인 사용자는 삭제할 수 없습니다.
+
+
+18. 사용자 계정의 잠금 및 해제를 설정합니다.
+
+   a. hr 사용자의 계정을 잠금니다.
+
+      SQL> alter user hr account lock;
+
+      SQL> conn hr/hr
+
+   b. hr 사용자 계정의 잠금을 풉니다.
+
+      SQL> conn / as sysdba
+
+      SQL> alter user hr account unlock;
+
+   c. sh 사용자 계정의 잠금을 풀고 패스워드를 변경합니다.
+
+      SQL> alter user sh identified by sh account unlock;
+
+
+19. 프로파일을 설정하고 관리합니다.
+
+   a. 현재 설정된 프로파일을 조회합니다.
+
+      SQL> col RESOURCE_NAME for a30
+      SQL> col LIMIT for a20
+
+      SQL> select RESOURCE_NAME, RESOURCE_TYPE, LIMIT
+           from DBA_PROFILES
+           where PROFILE='DEFAULT';
+
+   b. 프로파일의 패스워드 부문을 관리합니다.
+
+      1) FAILED_LOGIN_ATTEMPTS 값을 변경하고 테스트합니다.
+
+         SQL> ALTER PROFILE DEFAULT LIMIT 
+              FAILED_LOGIN_ATTEMPTS 2 ;
+
+         SQL> conn hr/abc
+
+         SQL> conn hr/abc
+
+         SQL> conn hr/hr
+
+         SQL> conn / as sysdba
+
+         SQL> alter user hr account unlock;
+
+         SQL> ALTER PROFILE DEFAULT LIMIT 
+              FAILED_LOGIN_ATTEMPTS UNLIMITED ;
+
+      2) PASSWORD_VERIFY_FUNCTION 값을 변경하고 테스트합니다.
+
+         (1) PASSWORD_VERIFY_FUNCTION 설정을 위한 스크립트를 실행합니다.
+
+             SQL> @?/rdbms/admin/utlpwdmg.sql
+
+         (2) 현재 설정된 프로파일을 조회합니다.
+
+             SQL> select RESOURCE_NAME, RESOURCE_TYPE, LIMIT
+                  from DBA_PROFILES
+                  where PROFILE='DEFAULT';
+
+         SQL> CREATE USER test IDENTIFIED BY test;
+
+         SQL> CREATE USER test IDENTIFIED BY welcome1;
+
+         SQL> CREATE USER test IDENTIFIED BY oracleoracle;
+
+(참고) 암호는 최소한 영문자 한 개, 숫자 한 개, 최소 길이는 8 자로 구성되어야 합니다.
+ 'welcome1', 'database1', 'account1', 'user1234', 'password1', 'oracle123' 등과 같은
+단순한 암호가 아니어야 합니다.
+
+         SQL> ALTER PROFILE DEFAULT LIMIT 
+              PASSWORD_VERIFY_FUNCTION NULL ;
+
+   c. 프로파일의 자원 관리 부문을 관리합니다.
+
+      1) RESOURCE_LIMIT을 확인하고 TRUE로 설정합니다.
+
+         SQL> show parameter RESOURCE_LIMIT
+
+         SQL> ALTER SYSTEM SET RESOURCE_LIMIT = TRUE;
+
+      2) LOGICAL_READS_PER_SESSION을 설정하고 테스트합니다.
+
+         SQL> ALTER PROFILE DEFAULT LIMIT
+              LOGICAL_READS_PER_SESSION 40;
+
+         SQL> conn hr/hr
+
+         SQL> select count(*) from employees;
+
+         SQL> conn / as sysdba
+
+         SQL> ALTER PROFILE DEFAULT LIMIT
+              LOGICAL_READS_PER_SESSION UNLIMITED;
+
+         SQL> ALTER SYSTEM SET RESOURCE_LIMIT = FALSE;
+
+
+20. 프로파일과 계정 상태를 테스트합니다.
+
+    a. 테스트를 위해 sh 계정의 패스워드를 초기화하고 잠김을 풉니다.
+
+       SQ> conn / as sysdba
+
+       SQL> alter user sh identified by sh account unlock;
+
+    b. OPEN(정상) 상태 : dba_users 뷰를 조회합니다.
+
+       SQL> select ACCOUNT_STATUS from dba_users where username = 'SH';
+
+       ACCOUNT_STATUS
+       --------------------------------
+       OPEN
+
+    c. LOCKED 상태 : 계정을 잠그고 dba_users 뷰를 조회합니다.
+
+       SQL> alter user sh account lock;
+
+       SQL> select ACCOUNT_STATUS from dba_users where username = 'SH';
+
+       ACCOUNT_STATUS
+       --------------------------------
+       LOCKED
+
+       SQL> alter user sh account unlock;
+
+    d. LOCKED(TIMED) 상태 : 
+       default 프로파일의 failed_login_attempts를 1로 설정하고,
+       sh 계정으로 잘못된 접속 시도후, dba_users 뷰를 조회합니다.
+
+       SQL> alter profile default LIMIT failed_login_attempts 1;
+
+       SQL> conn sh/wrongpassword
+       ERROR:
+       ORA-01017: invalid username/password; logon denied
+       Warning: You are no longer connected to ORACLE.
+
+       SQL> conn sh/sh
+       ERROR:
+       ORA-28000: the account is locked
+
+       SQL> conn / as sysdba
+
+       SQL> select ACCOUNT_STATUS from dba_users where username = 'SH';
+
+       ACCOUNT_STATUS
+       --------------------------------
+       LOCKED(TIMED)
+
+       SQL> alter user sh account unlock;
+
+       SQL> alter profile default LIMIT failed_login_attempts 10;
+
+    e. EXPIRED 상태 : sh 계정 만료 후, dba_users 뷰를 조회합니다.
+
+       SQL> alter user sh password expire;
+
+       SQL> select ACCOUNT_STATUS from dba_users where username = 'SH';
+
+       ACCOUNT_STATUS
+       --------------------------------
+       EXPIRED
+
+    f. EXPIRED & LOCKED 상태 : sh 계정 및 패스워드 만료 후, 
+       dba_users 뷰를 조회합니다.
+
+       SQL> alter user sh password expire account lock;
+
+       SQL> select ACCOUNT_STATUS from dba_users where username = 'SH';
+
+       ACCOUNT_STATUS
+       --------------------------------
+       EXPIRED & LOCKED
+
+       SQL> alter user sh identified by sh account unlock;
+
+    g. EXPIRED(GRACE) 상태 : 
+       default 프로파일의 password_life_time을 1/1440로
+       password_grace_time을 1로 설정하고,
+       1분 후 sh 계정으로 접속 시도후, dba_users 뷰를 조회합니다.
+
+       SQL> alter profile default limit password_life_time 1/1440;
+
+       SQL> alter profile default limit password_grace_time 1;
+
+       SQL> select ACCOUNT_STATUS from dba_users where username = 'SH';
+
+       ACCOUNT_STATUS
+       --------------------------------
+       OPEN
+
+       -- 1분 후
+       SQL> conn sh/sh
+       ERROR:
+       ORA-28002: the password will expire within 1 days
+       Connected.
+
+       SQL> conn / as sysdba
+
+       SQL> select ACCOUNT_STATUS from dba_users where username = 'SH';
+
+       ACCOUNT_STATUS
+       --------------------------------
+       EXPIRED(GRACE)
+
+       SQL> alter profile default limit password_life_time UNLIMITED;
+
+       SQL> alter profile default limit password_grace_time UNLIMITED;
+
+       SQL> alter profile default limit PASSWORD_LOCK_TIME UNLIMITED;
+
+       SQL> alter profile default limit FAILED_LOGIN_ATTEMPTS UNLIMITED;
+
+======================
+수고 하셨습니다! ^-^
+======================

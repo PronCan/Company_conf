@@ -1,0 +1,47 @@
+SQL> 
+SQL> select * from tab;
+
+TNAME                                                        TABTYPE            
+------------------------------------------------------------ --------------     
+ CLUSTERID                                                                      
+----------                                                                      
+COUNTRIES                                                    TABLE              
+                                                                                
+                                                                                
+DEPARTMENTS                                                  TABLE              
+                                                                                
+                                                                                
+EMPLOYEES                                                    TABLE              
+                                                                                
+                                                                                
+
+TNAME                                                        TABTYPE            
+------------------------------------------------------------ --------------     
+ CLUSTERID                                                                      
+----------                                                                      
+EMP_DETAILS_VIEW                                             VIEW               
+                                                                                
+                                                                                
+JOBS                                                         TABLE              
+                                                                                
+                                                                                
+JOB_HISTORY                                                  TABLE              
+                                                                                
+                                                                                
+
+TNAME                                                        TABTYPE            
+------------------------------------------------------------ --------------     
+ CLUSTERID                                                                      
+----------                                                                      
+LOCATIONS                                                    TABLE              
+                                                                                
+                                                                                
+REGIONS                                                      TABLE              
+                                                                                
+                                                                                
+
+8 rows selected.
+
+SQL> djkdfk
+SP2-0042: unknown command "djkdfk" - rest of line ignored.
+SQL> spool off
